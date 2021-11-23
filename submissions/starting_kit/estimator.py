@@ -130,7 +130,6 @@ class RegressionModel(metaclass=ABCMeta):
         self.n_epochs = n_epochs
         self.print_freq = print_freq
         self.is_local = self.is_local_run()
-        self.fold_idx = None
 
     def fit(self, X, y):
         """ Fit model only locally otherwise restore weights.
@@ -144,9 +143,6 @@ class RegressionModel(metaclass=ABCMeta):
         fold: int
             the fold index.
         """
-        if self.fold_idx is None:
-            raise ValueError("You must set the fold index before training.")
-        new_key = "model{0}".format(self.fold_idx + 1)
         self.model.train()
         self.reset_weights()
         if self.is_local:
@@ -177,13 +173,7 @@ class RegressionModel(metaclass=ABCMeta):
                                      time=int(time.time() - start_time))
                         print(json.dumps(stats))
             current_loss /= (len(loader) * self.n_epochs)
-            if os.path.isfile(self.__model_local_weights__):
-                state = torch.load(self.__model_local_weights__,
-                                   map_location="cpu")
-            else:
-                state = {}
-            state[new_key] = dict(loss=current_loss,
-                                  model=self.model.state_dict())
+            state = dict(loss=current_loss, model=self.model.state_dict())
             torch.save(state, self.__model_local_weights__)
         else:
             print("-- restoring trained weights...")
@@ -192,7 +182,7 @@ class RegressionModel(metaclass=ABCMeta):
                                  "submission folder.")
             state = torch.load(self.__model_local_weights__,
                                map_location="cpu")
-            self.model.load_state_dict(state[new_key]["model"])
+            self.model.load_state_dict(state["model"])
 
     def predict(self, X):
         """ Predict using the input model.
