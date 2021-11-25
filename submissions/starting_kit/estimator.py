@@ -111,7 +111,7 @@ class RegressionModel(metaclass=ABCMeta):
     __model_local_weights__ = os.path.join(
         os.path.dirname(__file__), "weights.pth")
 
-    def __init__(self, model, batch_size=10, n_epochs=30, print_freq=40):
+    def __init__(self, model, batch_size=10):
         """ Init class.
 
         Parameters
@@ -120,16 +120,9 @@ class RegressionModel(metaclass=ABCMeta):
             the input model.
         batch_size:int, default 10
             the mini_batch size.
-        n_epochs: int, default 5
-            the number of epochs.
-        print_freq: int, default 100
-            the print frequency.
         """
         self.model = model
         self.batch_size = batch_size
-        self.n_epochs = n_epochs
-        self.print_freq = print_freq
-        self.is_local = self.is_local_run()
 
     def fit(self, X, y):
         """ Fit model only locally otherwise restore weights.
@@ -140,49 +133,17 @@ class RegressionModel(metaclass=ABCMeta):
             training data.
         y: array-like (n_samples, )
             target values.
-        fold: int
-            the fold index.
         """
         self.model.train()
-        self.reset_weights()
-        if self.is_local:
-            print("-- training model...")
-            dataset = Dataset(X, y)
-            loader = torch.utils.data.DataLoader(
-                dataset, batch_size=self.batch_size, shuffle=True,
-                num_workers=1)
-            loss_function = nn.L1Loss()
-            optimizer = torch.optim.Adam(self.model.parameters(), lr=1e-4)
-            start_time = time.time()
-            current_loss = 0.
-            for epoch in range(self.n_epochs):
-                for step, data in enumerate(loader, start=epoch * len(loader)):
-                    inputs, targets = data
-                    inputs, targets = inputs.float(), targets.float()
-                    targets = targets.reshape((targets.shape[0], 1))
-                    optimizer.zero_grad()
-                    outputs = self.model(inputs)
-                    loss = loss_function(outputs, targets)
-                    loss.backward()
-                    optimizer.step()
-                    current_loss += loss.item()
-                    if step % self.print_freq == 0:
-                        stats = dict(epoch=epoch, step=step,
-                                     lr=optimizer.param_groups[0]["lr"],
-                                     loss=loss.item(),
-                                     time=int(time.time() - start_time))
-                        print(json.dumps(stats))
-            current_loss /= (len(loader) * self.n_epochs)
-            state = dict(loss=current_loss, model=self.model.state_dict())
-            torch.save(state, self.__model_local_weights__)
-        else:
-            print("-- restoring trained weights...")
-            if not os.path.isfile(self.__model_local_weights__):
-                raise ValueError("You must provide the model weigths in your "
-                                 "submission folder.")
-            state = torch.load(self.__model_local_weights__,
-                               map_location="cpu")
-            self.model.load_state_dict(state["model"])
+        if not os.path.isfile(self.__model_local_weights__):
+            raise ValueError("You must provide the model weigths in your "
+                             "submission folder.")
+        state = torch.load(self.__model_local_weights__,
+                           map_location="cpu")
+        if "model" not in state:
+            raise ValueError("Model weigths are searched in the state "
+                             "dictionnary at the 'model' key location.")
+        self.model.load_state_dict(state["model"])
 
     def predict(self, X):
         """ Predict using the input model.
@@ -208,31 +169,6 @@ class RegressionModel(metaclass=ABCMeta):
                 C.append(self.model(inputs))
             C = torch.cat(C, dim=0)
         return C.numpy().squeeze()
-
-    def reset_weights(self):
-        """ Reset all the weights of the model.
-        """
-        def weight_reset(m):
-            if hasattr(m, "reset_parameters"):
-                m.reset_parameters()
-        self.model.apply(weight_reset)
-
-    @classmethod
-    def is_local_run(cls):
-        """ Check wether the run is local or not based on the process name.
-
-        Returns
-        -------
-        is_local: bool
-            type of run.
-        """
-        pid = os.getpid()
-        process = psutil.Process(pid)
-        process_name = process.name()
-        ppid = process.ppid()
-        process = psutil.Process(ppid)
-        parent_name = process.name()
-        return (process_name == "ramp-test" and parent_name == "bash")
 
 
 def get_estimator():
