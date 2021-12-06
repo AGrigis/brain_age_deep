@@ -1,3 +1,11 @@
+|Testing|_ |Pep8|_
+
+![Pep8](https://github.com/AGrigis/brain_age_deep/actions/workflows/pep8.yml/badge.svg)
+![Testing Conda](https://github.com/AGrigis/brain_age_deep/actions/workflows/testing_conda.yml/badge.svg)
+![Testing Pip](https://github.com/AGrigis/brain_age_deep/actions/workflows/testing_pip.yml/badge.svg)
+![Testing Notebook](https://github.com/AGrigis/brain_age_deep/actions/workflows/testing_notebook.yml/badge.svg)
+
+
 # Brain age regression
 
 Predict age from brain grey matter (regression) using Deep Learning.
