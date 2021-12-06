@@ -1,4 +1,4 @@
-name: brain_age
+name: ramp-brainage
 channels:
   - conda-forge
 dependencies:

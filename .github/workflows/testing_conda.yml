@@ -25,8 +25,11 @@ jobs:
           environment-file: environment.yml
           python-version: 3.8
           auto-activate-base: false
+      - name: Info Conda
+        run: |
+          conda info
+          conda list
       - name: Test
         run: |
-          conda activate brain_age
           python download_data.py
           ramp-test --quick-test

@@ -7,4 +7,3 @@ matplotlib
 seaborn
 jupyter
 torch
-psutils
