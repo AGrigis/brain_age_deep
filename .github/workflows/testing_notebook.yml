@@ -26,4 +26,5 @@ jobs:
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
     - name: Test
       run: |
-        jupyter nbconvert --execute brain_age_starting_kit.ipynb --to html --ExecutePreprocessor.kernel_name=python3
+        jupyter nbconvert --to script brain_age_starting_kit.ipynb
+        python brain_age_starting_kit.py
