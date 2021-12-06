@@ -3,7 +3,7 @@ name: "TESTING CONDA"
 on:
   push:
     branches:
-      - master
+      - "*"
   pull_request:
     branches:
       - "*"

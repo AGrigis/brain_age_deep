@@ -3,7 +3,7 @@ name: "PEP8"
 on:
   push:
     branches:
-      - master
+      - "*"
   pull_request:
     branches:
       - "*"

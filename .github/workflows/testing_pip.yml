@@ -3,7 +3,7 @@ name: "TESTING PIP"
 on:
   push:
     branches:
-      - master
+      - "*"
   pull_request:
     branches:
       - "*"
