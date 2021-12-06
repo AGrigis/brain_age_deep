@@ -11,6 +11,5 @@ dependencies:
   - seaborn
   - nilearn
   - pytorch
-  - psutil
   - pip:
     - ramp-workflow
