@@ -1,5 +1,3 @@
-|Testing|_ |Pep8|_
-
 ![Pep8](https://github.com/AGrigis/brain_age_deep/actions/workflows/pep8.yml/badge.svg)
 ![Testing Conda](https://github.com/AGrigis/brain_age_deep/actions/workflows/testing_conda.yml/badge.svg)
 ![Testing Pip](https://github.com/AGrigis/brain_age_deep/actions/workflows/testing_pip.yml/badge.svg)
@@ -83,7 +81,6 @@ This starting kit requires Python and the following dependencies:
 * `seaborn`
 * `jupyter`
 * `torch`
-* `psutils`
 * `ramp-workflow`
 
 You can install the dependencies with the following command-line:
