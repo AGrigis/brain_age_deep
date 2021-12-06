@@ -19,14 +19,9 @@ need to be named and how each file should be structured.
 """
 
 import os
-import time
-import json
-import psutil
 from abc import ABCMeta
-import numpy as np
 from sklearn.base import BaseEstimator
 from sklearn.base import TransformerMixin
-from sklearn.base import BaseEstimator
 from sklearn.preprocessing import StandardScaler
 from sklearn.pipeline import make_pipeline
 import torch
@@ -165,7 +160,7 @@ class RegressionModel(metaclass=ABCMeta):
         with torch.no_grad():
             C = []
             for i, inputs in enumerate(testloader):
-                inputs = inputs.float() 
+                inputs = inputs.float()
                 C.append(self.model(inputs))
             C = torch.cat(C, dim=0)
         return C.numpy().squeeze()

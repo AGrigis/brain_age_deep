@@ -9,7 +9,7 @@
 
 
 """
-This parametrizes the setup and uses building blocks from RAMP workflow. 
+This parametrizes the setup and uses building blocks from RAMP workflow.
 """
 
 import os

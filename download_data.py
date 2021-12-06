@@ -9,13 +9,8 @@
 
 import os
 import os.path
-import numpy as np
-import pandas as pd
 import urllib.request
-import click
-
-from sklearn.model_selection import train_test_split
-from shutil import copyfile, make_archive, unpack_archive, move
+from shutil import move
 
 try:
     PATH_DATA = os.path.join(
@@ -25,19 +20,23 @@ except NameError:
 
 os.makedirs(PATH_DATA, exist_ok=True)
 
+
 def fetch_data(files, dst, base_url, verbose=1):
-    """Fetch dataset.
+    """ Fetch dataset.
 
-    Args:
-        files (str): file.
-        dst (str): destination directory.
-        base_url (str): url, examples:
+    Parameters
+    ----------
+    files: list of str
+        basename of files to be fetched.
+    dst: str
+        destination directory.
+    base_url: str
+        base URL where are stored the files to be fetched.
 
-
-            ftp://ftp.cea.fr/pub/unati/share/anat
-    Returns:
-        downloaded ([str, ]): paths to downloaded files.
-
+    Returns
+    -------
+    downloaded list of str
+        paths to the downloaded files.
     """
     downloaded = []
     for file in files:
@@ -53,13 +52,13 @@ def fetch_data(files, dst, base_url, verbose=1):
 
 if __name__ == "__main__":
 
-    fetch_data(files=['train_participants.csv', 'train_rois.csv', 'train_vbm.npz',
-                      'validation_participants.csv', 'validation_rois.csv', 'validation_vbm.npz'],
+    fetch_data(files=['train_participants.csv', 'train_rois.csv',
+                      'train_vbm.npz', 'validation_participants.csv',
+                      'validation_rois.csv', 'validation_vbm.npz'],
                dst=PATH_DATA,
-               base_url='ftp://ftp.cea.fr/pub/unati/people/educhesnay/data/brain_anatomy_ixi/data',
+               base_url=('ftp://ftp.cea.fr/pub/unati/people/educhesnay/data/'
+                         'brain_anatomy_ixi/data'),
                verbose=1)
-
-    # validation => test
     move(os.path.join(PATH_DATA, 'validation_participants.csv'),
          os.path.join(PATH_DATA, 'test_participants.csv'))
     move(os.path.join(PATH_DATA, 'validation_vbm.npz'),
