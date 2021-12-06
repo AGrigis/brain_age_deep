@@ -1,0 +1,32 @@
+name: "TESTING CONDA"
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - "*"
+
+jobs:
+  build_conda:
+    name: Linux Conda
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash -l {0}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Set up Python via Conda
+        uses: conda-incubator/setup-miniconda@v2
+        with:
+          activate-environment: anaconda-client-env
+          environment-file: environment.yml
+          python-version: 3.8
+          auto-activate-base: false
+      - name: Test
+        run: |
+          conda activate ramp-brainage
+          python download_data.py
+          ramp-test --quick-test
