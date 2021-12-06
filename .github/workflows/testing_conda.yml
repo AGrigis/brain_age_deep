@@ -27,6 +27,6 @@ jobs:
           auto-activate-base: false
       - name: Test
         run: |
-          conda activate ramp-brainage
+          conda activate brain_age
           python download_data.py
           ramp-test --quick-test
