@@ -48,11 +48,12 @@ def get_cv(X, y):
 
     Notes
     -----
-    Fold indices are tracked at training time and append to train indices at
-    position 0.
+    1-fold is not supported yet by ramp-board, use 2-fold insted.
     """
     return [train_test_split(range(len(X)), shuffle=True, test_size=0.25,
-                             random_state=0)]
+                             random_state=0),
+            train_test_split(range(len(X)), shuffle=True, test_size=0.25,
+                             random_state=20)]
 
 
 def _read_data(path, dataset, datatype=["rois", "vbm"]):
