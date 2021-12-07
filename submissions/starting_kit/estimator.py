@@ -156,7 +156,7 @@ class RegressionModel(metaclass=ABCMeta):
         self.model.eval()
         dataset = Dataset(X)
         testloader = torch.utils.data.DataLoader(
-            dataset, batch_size=self.batch_size, shuffle=False, num_workers=1)
+            dataset, batch_size=self.batch_size, shuffle=False, num_workers=0)
         with torch.no_grad():
             C = []
             for i, inputs in enumerate(testloader):
