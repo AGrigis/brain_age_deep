@@ -26,7 +26,7 @@ jobs:
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
     - name: Test
       run: |
-        jupyter nbconvert --to script brain_age_starting_kit.ipynb
-        sed -i 's/^get_ipython/#&/' brain_age_starting_kit.py
+        jupyter nbconvert --to script brain_age_deep_starting_kit.ipynb
+        sed -i 's/^get_ipython/#&/' brain_age_deep_starting_kit.py
         python download_data.py
-        python brain_age_starting_kit.py
+        python brain_age_deep_starting_kit.py
